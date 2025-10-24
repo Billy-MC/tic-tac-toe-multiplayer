@@ -28,6 +28,13 @@ export default defineConfig([
 					allowWithName: '^DefaultTheme$',
 				},
 			],
+			'no-console': ['error', { allow: ['warn', 'error'] }],
+		},
+	},
+	{
+		files: ['src/utils/logger.ts'],
+		rules: {
+			'no-console': 'off',
 		},
 	},
 ])

@@ -45,7 +45,8 @@
 
 		/* Additional Options for React */
 		"allowJs": false,
-		"checkJs": false
+		"checkJs": false,
+		"types": ["vite/client"]
 	},
 	"include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"],
 	"exclude": [
