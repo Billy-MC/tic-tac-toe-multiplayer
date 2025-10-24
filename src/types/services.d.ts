@@ -1,4 +1,4 @@
-import type { GameListItem, GameState, User } from '@/types/game'
+import type { GameListItem, GameState, User } from '@/types/ticTacToe'
 
 export interface IAuthService {
 	signIn(email: string, password: string): Promise<User>
