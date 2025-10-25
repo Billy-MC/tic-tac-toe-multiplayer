@@ -36,11 +36,6 @@ const EmptyState = styled.div`
 	color: ${props => props.theme.colors.textLight};
 `
 
-const EmptyIcon = styled.div`
-	font-size: 3.75rem;
-	margin-bottom: 1rem;
-`
-
 const EmptyTitle = styled.p`
 	font-size: ${props => props.theme.fontSize.lg};
 `
@@ -108,7 +103,6 @@ export {
 	Subtitle,
 	GamesList,
 	EmptyState,
-	EmptyIcon,
 	EmptyTitle,
 	EmptyDescription,
 	GameItem,

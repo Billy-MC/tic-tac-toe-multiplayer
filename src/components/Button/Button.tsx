@@ -23,6 +23,7 @@ const Button: React.FC<ButtonProps> = ({
 			$size={size}
 			$isLoading={isLoading}
 			disabled={disabled || isLoading}
+			aria-busy={isLoading}
 			{...props}
 		>
 			{isLoading ? (

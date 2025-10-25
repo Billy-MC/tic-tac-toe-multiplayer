@@ -17,7 +17,6 @@ import {
 	Subtitle,
 	GamesList,
 	EmptyState,
-	EmptyIcon,
 	EmptyTitle,
 	EmptyDescription,
 	GameItem,
@@ -68,13 +67,12 @@ const Lobby: FC<LobbyProps> = ({ games, onCreateGame, onJoinGame, isLoading, use
 					</Subtitle>
 				</div>
 				<Button onClick={onCreateGame} isLoading={isLoading} size="lg">
-					+ Create Game
+					Create Game
 				</Button>
 			</Header>
 			<GamesList>
 				{games.length === 0 ? (
 					<EmptyState>
-						<EmptyIcon>🎮</EmptyIcon>
 						<EmptyTitle>No Games Available</EmptyTitle>
 						<EmptyDescription>
 							There are currently no games in the lobby. Create a new game to get
