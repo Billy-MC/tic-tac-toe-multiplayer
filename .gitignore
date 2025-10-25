@@ -34,6 +34,5 @@ node_modules/.tmp
 .env.production
 .env.*.local
 
-# AWS
-.aws-sam/
-samconfig.toml
+# Testing Coverage
+coverage/
