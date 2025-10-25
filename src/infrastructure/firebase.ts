@@ -1,6 +1,6 @@
-import { initializeApp, type FirebaseOptions } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
-import { getDatabase } from 'firebase/database'
+import { FirebaseApp, initializeApp, type FirebaseOptions } from 'firebase/app'
+import { Auth, getAuth } from 'firebase/auth'
+import { Database, getDatabase } from 'firebase/database'
 import { ENV } from '@/env'
 
 // Firebase configuration
@@ -17,10 +17,10 @@ const firebaseConfig: FirebaseOptions = {
 }
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig)
+const app: FirebaseApp = initializeApp(firebaseConfig)
 
 // Initialize services
-export const auth = getAuth(app)
-export const database = getDatabase(app)
+export const auth: Auth = getAuth(app)
+export const database: Database = getDatabase(app)
 
 export default app

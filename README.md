@@ -1,4 +1,4 @@
-# 🎮 Real-Time Multiplayer Tic Tac Toe
+# Real-Time Multiplayer Tic Tac Toe
 
 A real-time multiplayer Tic Tac Toe game built with React, TypeScript, and Firebase. Play with friends in real-time with instant synchronization and live updates.
 
@@ -95,8 +95,7 @@ src/
 
 ### Prerequisites
 
-- Node.js 22+
-- npm or pnpm
+- Node.js 18+ and npm/pnpm/yarn
 - Firebase account
 - Git
 
@@ -111,10 +110,17 @@ cd tic-tac-toe-multiplayer
 
 2. **Install dependencies**
 
+Choose your preferred package manager:
+
 ```zsh
+# Using npm
 npm install
-# or
+
+# Using pnpm (recommended)
 pnpm install
+
+# Using yarn
+yarn install
 ```
 
 3. **Set up Firebase**
@@ -148,9 +154,9 @@ Fill in the Firebase configuration:
 ```env
 VITE_FIREBASE_API_KEY=your_api_key
 VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
-VITE_FIREBASE_DATABASE_URL=https://your_project_id.firebaseio.com
+VITE_FIREBASE_DATABASE_URL=https://your_project_id-default-rtdb.your_region.firebasedatabase.app
 VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
+VITE_FIREBASE_STORAGE_BUCKET=your_project_id.firebasestorage.app
 VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
 VITE_MEASUREMENT_ID=your_measurement_id
@@ -158,10 +164,15 @@ VITE_MEASUREMENT_ID=your_measurement_id
 
 5. **Start development server**
 
-```bash
+```zsh
+# Using npm
 npm run dev
-# or
+
+# Using pnpm
 pnpm dev
+
+# Using yarn
+yarn dev
 ```
 
 ## How to Play
@@ -191,7 +202,7 @@ pnpm dev
 
 ## Running Tests
 
-```bash
+```zsh
 # Run all tests
 npm test
 
@@ -207,7 +218,7 @@ npm run test:ui
 
 ## Build for Production
 
-```bash
+```zsh
 npm run build
 npm run preview
 ```
