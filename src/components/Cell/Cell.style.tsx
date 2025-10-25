@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { pulseSlow } from '../SharedStyle/SharedStyle.style'
+import { pulseSlow } from '../SharedStyled/mixin'
 
 const StyledCell = styled.button<{
 	$isDisabled: boolean
@@ -11,9 +11,9 @@ const StyledCell = styled.button<{
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-color: ${props => props.theme.colors.bgPrimary};
 	border: 4px solid
 		${props => (props.$isWinningCell ? props.theme.colors.yellow : props.theme.colors.border)};
+	background-color: ${props => props.theme.colors.bgPrimary};
 	border-radius: ${props => props.theme.borderRadius.xl};
 	transition: all ${props => props.theme.transitions.normal};
 	cursor: ${props => (props.$isDisabled || props.$hasValue ? 'default' : 'pointer')};
@@ -44,10 +44,10 @@ const StyledCell = styled.button<{
 `
 
 const CellContent = styled.span<{ $player: 'X' | 'O' }>`
-	font-size: ${props => props.theme.fontSize['6xl']};
-	font-weight: ${props => props.theme.fontWeight.bold};
 	color: ${props =>
 		props.$player === 'X' ? props.theme.colors.playerX : props.theme.colors.playerO};
+	font-size: ${props => props.theme.fontSize['6xl']};
+	font-weight: ${props => props.theme.fontWeight.bold};
 `
 
 export { CellContent, StyledCell }

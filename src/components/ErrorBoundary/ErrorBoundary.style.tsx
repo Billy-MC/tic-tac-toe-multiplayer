@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { cardBase } from '../SharedStyle/SharedStyle.style'
+import { cardBase } from '../SharedStyled/mixin'
 
 const ErrorContainer = styled.div`
 	min-height: 100vh;
@@ -29,9 +29,9 @@ const ErrorIcon = styled.div`
 `
 
 const ErrorTitle = styled.h1`
+	color: ${props => props.theme.colors.textPrimary};
 	font-size: ${props => props.theme.fontSize['3xl']};
 	font-weight: ${props => props.theme.fontWeight.bold};
-	color: ${props => props.theme.colors.textPrimary};
 	margin-bottom: 0.5rem;
 `
 

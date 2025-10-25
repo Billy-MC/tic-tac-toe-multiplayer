@@ -1,12 +1,6 @@
 import styled from 'styled-components'
-import { baseTitleStyle } from '../SharedStyle/SharedStyle.style'
-
-const StyledCard = styled.div`
-	background-color: ${props => props.theme.colors.bgPrimary};
-	border-radius: ${props => props.theme.borderRadius.xl};
-	box-shadow: ${props => props.theme.shadows.lg};
-	padding: 1.5rem;
-`
+import { baseTitleStyle } from '../SharedStyled/mixin'
+import { StyledCard } from '../SharedStyled/SharedStyled'
 
 const CardTitle = styled.h2`
 	${baseTitleStyle};

@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 import { Player } from '@/types/ticTacToe'
-import { baseTitleStyle } from '@/components/SharedStyle/SharedStyle.style'
+import { baseTitleStyle } from '@/components/SharedStyled/mixin'
 
 type StatusVariant = 'win' | 'lose' | 'draw' | 'yourTurn' | 'waiting'
 

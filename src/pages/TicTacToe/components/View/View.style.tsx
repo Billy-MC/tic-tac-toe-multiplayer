@@ -1,4 +1,4 @@
-import { baseTitleStyle, cardBase, pulseSlow } from '@/components/SharedStyle/SharedStyle.style'
+import { baseTitleStyle, cardBase, pulseSlow } from '@/components/SharedStyled/mixin'
 import styled from 'styled-components'
 
 const GameContainer = styled.div`

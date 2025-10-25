@@ -57,7 +57,7 @@ const View: FC<ViewProps> = ({ game, userId, onMakeMove, onLeaveGame, error }) =
 	return (
 		<GameContainer>
 			<Header>
-				<Title>Game Room</Title>
+				<Title>Tic Tac Toe Room</Title>
 				<Button variant="danger" size="sm" onClick={onLeaveGame}>
 					Leave Game
 				</Button>
