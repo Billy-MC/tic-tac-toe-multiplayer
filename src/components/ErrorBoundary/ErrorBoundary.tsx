@@ -7,7 +7,6 @@ import {
 	ErrorContainer,
 	ErrorCard,
 	ErrorContent,
-	ErrorIcon,
 	ErrorTitle,
 	ErrorMessage,
 	ErrorDetails,

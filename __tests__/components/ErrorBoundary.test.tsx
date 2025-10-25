@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import type { JSX } from 'react'
-import ErrorBoundary from '../../src/components/ErrorBoundary'
+import { ErrorBoundary } from '../../src/components/ErrorBoundary'
 
-function BuggyComponent(): JSX.Element {
+const BuggyComponent = (): JSX.Element => {
 	throw new Error('Boom')
 }
 

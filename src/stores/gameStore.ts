@@ -77,17 +77,17 @@ const useGameStore = create<GameStore>((set, __get) => ({
 	},
 
 	subscribeToGame: (gameId: string) => {
-		const gameSubscription = gameService.listenToGame(gameId, game => {
+		const unsubscribe = gameService.listenToGame(gameId, game => {
 			set({ currentGame: game })
 		})
-		return gameSubscription
+		return unsubscribe
 	},
 
 	subscribeToAvailableGames: () => {
-		const availableGamesSubscription = gameService.listenToAvailableGames(games => {
+		const unsubscribe = gameService.listenToAvailableGames(games => {
 			set({ availableGames: games })
 		})
-		return availableGamesSubscription
+		return unsubscribe
 	},
 
 	clearGame: () => set({ currentGame: null, error: null }),

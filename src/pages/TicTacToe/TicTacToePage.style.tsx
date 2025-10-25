@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 const AppContainer = styled.div`
 	min-height: 100vh;
 	background: linear-gradient(
@@ -57,24 +57,6 @@ const LoadingContent = styled.div`
 	text-align: center;
 `
 
-const spin = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`
-
-const Spinner = styled.div`
-	animation: ${spin} 1s linear infinite;
-	border-radius: ${props => props.theme.borderRadius.full};
-	height: 4rem;
-	width: 4rem;
-	border-bottom: 4px solid ${props => props.theme.colors.primary};
-	margin: 0 auto 1rem;
-`
-
 const LoadingText = styled.p`
 	color: ${props => props.theme.colors.textSecondary};
 	font-size: ${props => props.theme.fontSize.lg};
@@ -102,7 +84,6 @@ export {
 	Main,
 	LoadingContainer,
 	LoadingContent,
-	Spinner,
 	LoadingText,
 	AuthContainer,
 }

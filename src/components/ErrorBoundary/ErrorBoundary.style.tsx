@@ -23,11 +23,6 @@ const ErrorContent = styled.div`
 	text-align: center;
 `
 
-const ErrorIcon = styled.div`
-	font-size: 3.75rem;
-	margin-bottom: 1rem;
-`
-
 const ErrorTitle = styled.h1`
 	color: ${props => props.theme.colors.textPrimary};
 	font-size: ${props => props.theme.fontSize['3xl']};
@@ -166,7 +161,6 @@ export {
 	ErrorContainer,
 	ErrorCard,
 	ErrorContent,
-	ErrorIcon,
 	ErrorTitle,
 	ErrorMessage,
 	ErrorDetails,

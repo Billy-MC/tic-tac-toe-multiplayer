@@ -4,13 +4,37 @@ import { useState, useEffect } from 'react'
 import Lobby from '@/pages/TicTacToe/components/Lobby'
 import View from '@/pages/TicTacToe/components/View'
 import Button from '@/components/Button'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ErrorBoundary, FirebaseErrorBoundary } from '@/components/ErrorBoundary'
 import useGameStore from '@/stores/gameStore'
+import AuthForm from '@/components/AuthForm/AuthForm'
+import useAuthStore from '@/stores/authStore'
 import { logger } from '@/utils/logger'
-import { AppContainer, Container, Header, Main, Subtitle, Title } from './TicTacToePage.style'
+import {
+	AppContainer,
+	AuthContainer,
+	Container,
+	Header,
+	LoadingContainer,
+	LoadingContent,
+	LoadingText,
+	Main,
+	Subtitle,
+	Title,
+} from './TicTacToePage.style'
+import { Spinner } from '@/components/Button/Button.style'
 
 const TicTacToePage: FC = () => {
-	const [currentGameId, setCurrentGameId] = useState<string | null>(null)
+	const {
+		user,
+		isLoading: authLoading,
+		error: authError,
+		signIn,
+		signUp,
+		signOut,
+		initializeApp,
+		clearError: clearAuthError,
+	} = useAuthStore()
+
 	const {
 		currentGame,
 		availableGames,
@@ -26,13 +50,22 @@ const TicTacToePage: FC = () => {
 		clearError: clearGameError,
 	} = useGameStore()
 
+	const [currentGameId, setCurrentGameId] = useState<string | null>(null)
+
+	// Initialize authentication state
 	useEffect(() => {
-		if (!currentGameId) {
+		initializeApp()
+	}, [initializeApp])
+
+	// Subscribe to available games when not in a game and user is logged in
+	useEffect(() => {
+		if (user && !currentGameId) {
 			const unsubscribe = subscribeToAvailableGames()
 			return () => unsubscribe()
 		}
-	}, [currentGameId, subscribeToAvailableGames])
+	}, [currentGameId, user, subscribeToAvailableGames])
 
+	// Subscribe to current game updates
 	useEffect(() => {
 		if (currentGameId) {
 			const unsubscribe = subscribeToGame(currentGameId)
@@ -43,13 +76,16 @@ const TicTacToePage: FC = () => {
 		}
 	}, [currentGameId, subscribeToGame, clearGame])
 
+	// Clear errors when game or auth state changes
 	useEffect(() => {
 		clearGameError()
-	}, [currentGame, clearGameError])
+		clearAuthError()
+	}, [currentGame, clearGameError, clearAuthError])
 
 	const handleCreateGame = async () => {
+		if (!user) return
 		try {
-			const gameId = await createGame('user_1', 'Player 1') // TODO: Replace with actual user ID and name
+			const gameId = await createGame(user.id, user.displayName)
 			setCurrentGameId(gameId)
 		} catch (error) {
 			logger.error('Failed to create game:', error)
@@ -57,8 +93,10 @@ const TicTacToePage: FC = () => {
 	}
 
 	const handleJoinGame = async (gameId: string) => {
+		if (!user) return
+
 		try {
-			await joinGame(gameId, 'user_2') // TODO: Replace with actual user ID
+			await joinGame(gameId, user.id)
 			setCurrentGameId(gameId)
 		} catch (error) {
 			logger.error('Failed to join game:', error)
@@ -66,22 +104,59 @@ const TicTacToePage: FC = () => {
 	}
 
 	const handleMakeMove = async (cellIndex: number) => {
-		if (!currentGameId) return
+		if (!user || !currentGameId) return
 		try {
-			await makeMove(currentGameId, cellIndex, 'user_1') // TODO: Replace with actual user ID
+			await makeMove(currentGameId, cellIndex, user.id)
 		} catch (error) {
 			logger.error('Failed to make move:', error)
 		}
 	}
 
 	const handleLeaveGame = async () => {
-		if (!currentGameId) return
+		if (!user || !currentGameId) return
 		try {
-			await leaveGame(currentGameId, 'user_1') // TODO: Replace with actual user ID
+			await leaveGame(currentGameId, user.id)
 			setCurrentGameId(null)
 		} catch (error) {
 			logger.error('Failed to leave game:', error)
 		}
+	}
+
+	const handleSignOut = async () => {
+		try {
+			if (currentGameId && user) {
+				await leaveGame(currentGameId, user.id)
+			}
+			setCurrentGameId(null)
+			await signOut()
+		} catch (error: unknown) {
+			logger.error('Failed to sign out:', error instanceof Error ? error.message : error)
+		}
+	}
+
+	// Loading state
+	if (authLoading) {
+		return (
+			<LoadingContainer>
+				<LoadingContent>
+					<Spinner />
+					<LoadingText>{authError ? `Error: ${authError}` : 'Loading...'}</LoadingText>
+				</LoadingContent>
+			</LoadingContainer>
+		)
+	}
+
+	// If not authenticated, show auth form
+	if (!user) {
+		return (
+			<ErrorBoundary>
+				<AuthContainer>
+					<FirebaseErrorBoundary onRetry={() => window.location.reload()}>
+						<AuthForm onSignIn={signIn} onSignUp={signUp} error={authError} />
+					</FirebaseErrorBoundary>
+				</AuthContainer>
+			</ErrorBoundary>
+		)
 	}
 
 	return (
@@ -92,32 +167,33 @@ const TicTacToePage: FC = () => {
 					<Header>
 						<div>
 							<Title>Tic Tac Toe Multiplayer</Title>
-							<Subtitle>Welcome, Player 1</Subtitle>{' '}
-							{/** TODO: Replace with actual player name */}
+							<Subtitle>Welcome, {user.displayName}</Subtitle>{' '}
 						</div>
-						<Button onClick={handleCreateGame} variant="secondary">
+						<Button onClick={handleSignOut} variant="secondary">
 							Sign Out
 						</Button>
 					</Header>
 					{/* Main Content */}
 					<Main>
-						{currentGame ? (
-							<View
-								game={currentGame}
-								userId="user_1"
-								onMakeMove={handleMakeMove}
-								onLeaveGame={handleLeaveGame}
-								error={gameError}
-							/>
-						) : (
-							<Lobby
-								games={availableGames}
-								onJoinGame={handleJoinGame}
-								onCreateGame={handleCreateGame}
-								isLoading={gameLoading}
-								userName="Player 1"
-							/>
-						)}
+						<FirebaseErrorBoundary onRetry={() => window.location.reload()}>
+							{currentGame ? (
+								<View
+									game={currentGame}
+									userId="user_1"
+									onMakeMove={handleMakeMove}
+									onLeaveGame={handleLeaveGame}
+									error={gameError}
+								/>
+							) : (
+								<Lobby
+									games={availableGames}
+									onJoinGame={handleJoinGame}
+									onCreateGame={handleCreateGame}
+									isLoading={gameLoading}
+									userName="Player 1"
+								/>
+							)}
+						</FirebaseErrorBoundary>
 					</Main>
 				</Container>
 			</AppContainer>
