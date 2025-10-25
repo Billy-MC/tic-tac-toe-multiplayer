@@ -1,4 +1,4 @@
-import type { Player, Board, GameStatus, GameResult } from '@/types/ticTacToe'
+import type { Player, Board, GameResult } from '@/types/ticTacToe'
 
 const WINNING_LINES: ReadonlyArray<readonly [number, number, number]> = [
 	[0, 1, 2], // Top row

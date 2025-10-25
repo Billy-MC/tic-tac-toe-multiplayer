@@ -1,8 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
-import React from 'react'
-import { FaSpinner } from 'react-icons/fa'
 
-import { StyledButton, Spinner } from './Button.style'
+import { Spinner, StyledButton } from './Button.style'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	variant?: 'primary' | 'secondary' | 'danger'
@@ -38,3 +36,5 @@ const Button: React.FC<ButtonProps> = ({
 		</StyledButton>
 	)
 }
+
+export default Button

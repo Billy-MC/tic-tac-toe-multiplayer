@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { cardBase } from '../SharedStyle/SharedStyle.style'
 
 const ErrorContainer = styled.div`
 	min-height: 100vh;
@@ -14,10 +15,7 @@ const ErrorContainer = styled.div`
 `
 
 const ErrorCard = styled.div`
-	max-width: 42rem;
-	background-color: ${props => props.theme.colors.bgPrimary};
-	border-radius: ${props => props.theme.borderRadius.xl};
-	box-shadow: ${props => props.theme.shadows.lg};
+	${cardBase};
 	padding: 2rem;
 `
 

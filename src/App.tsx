@@ -1,5 +1,11 @@
+import TicTacToePage from './pages/TicTacToe'
+
 function App() {
-	return <></>
+	return (
+		<>
+			<TicTacToePage />
+		</>
+	)
 }
 
 export default App
