@@ -6,7 +6,7 @@ import View from '@/pages/TicTacToe/components/View'
 import Button from '@/components/Button'
 import { ErrorBoundary, FirebaseErrorBoundary } from '@/components/ErrorBoundary'
 import useGameStore from '@/stores/gameStore'
-import AuthForm from '@/components/AuthForm/AuthForm'
+import AuthForm from '@/components/AuthForm'
 import useAuthStore from '@/stores/authStore'
 import { logger } from '@/utils/logger'
 import {

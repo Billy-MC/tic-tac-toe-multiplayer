@@ -1,4 +1,4 @@
-import { FC, useActionState, useRef, useState } from 'react'
+import { FC, useActionState, useEffect, useRef, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import Input from '@/components/Input'
 import {
@@ -35,9 +35,11 @@ const SubmitButton: FC<{ children: React.ReactNode }> = ({ children }) => {
 }
 
 const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError }) => {
-	const [isSignUp, setIsSignUp] = useState(true)
+	const [isSignUp, setIsSignUp] = useState(false)
 	const [formKey, setFormKey] = useState(0)
 	const formRef = useRef<HTMLFormElement>(null)
+
+	const [localError, setLocalError] = useState<string | null>(null)
 
 	const [state, formAction, isPending] = useActionState(
 		async (_prev: { error: string | null }, formData: FormData) => {
@@ -65,12 +67,17 @@ const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError 
 
 	const toggleMode = () => {
 		setIsSignUp(!isSignUp)
-		formRef.current?.reset()
-		setFormKey(k => k + 1)
+		formRef.current?.reset() // reset native input values
+		setFormKey(k => k + 1) // force React remount form subtree
+		setLocalError(null) // reset error message
 	}
 
+	useEffect(() => {
+		setLocalError(state.error)
+	}, [state.error])
+
 	return (
-		<FormContainer>
+		<FormContainer key={isSignUp ? 'signup' : 'signin'}>
 			<Header>
 				<Title>Tic Tac Toe</Title>
 				<Subtitle>
@@ -78,7 +85,7 @@ const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError 
 				</Subtitle>
 			</Header>
 
-			<Form key={formKey} ref={formRef} method="post" action={formAction}>
+			<Form ref={formRef} key={formKey} method="post" action={formAction} noValidate>
 				{isSignUp && (
 					<Input
 						id="displayName"
@@ -116,8 +123,8 @@ const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError 
 
 				<input id="mode" type="hidden" name="mode" value={isSignUp ? 'signup' : 'signin'} />
 
-				{(state.error || externalError) && (
-					<ErrorMessage>{state.error || externalError}</ErrorMessage>
+				{(localError || externalError) && (
+					<ErrorMessage>{localError || externalError}</ErrorMessage>
 				)}
 
 				<SubmitButton>{isSignUp ? 'Sign Up' : 'Sign In'}</SubmitButton>
