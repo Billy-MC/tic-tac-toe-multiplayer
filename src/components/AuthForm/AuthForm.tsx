@@ -1,4 +1,4 @@
-import { FC, useActionState, useEffect, useRef, useState } from 'react'
+import { FC, useActionState, useRef, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import Input from '@/components/Input'
 import {
@@ -19,6 +19,11 @@ interface AuthFormProps {
 	error: string | null
 }
 
+type InnerFormProps = Pick<AuthFormProps, 'onSignIn' | 'onSignUp'> & {
+	isSignUp: boolean
+	externalError: string | null
+}
+
 const SubmitButton: FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { pending } = useFormStatus()
 	return (
@@ -34,12 +39,8 @@ const SubmitButton: FC<{ children: React.ReactNode }> = ({ children }) => {
 	)
 }
 
-const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError }) => {
-	const [isSignUp, setIsSignUp] = useState(false)
-	const [formKey, setFormKey] = useState(0)
+const InnerForm: FC<InnerFormProps> = ({ isSignUp, onSignIn, onSignUp, externalError }) => {
 	const formRef = useRef<HTMLFormElement>(null)
-
-	const [localError, setLocalError] = useState<string | null>(null)
 
 	const [state, formAction, isPending] = useActionState(
 		async (_prev: { error: string | null }, formData: FormData) => {
@@ -57,7 +58,7 @@ const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError 
 			try {
 				if (mode === 'signup') await onSignUp(email, password, displayName)
 				else await onSignIn(email, password)
-				return { error: null } //Success
+				return { error: null }
 			} catch (_error: unknown) {
 				return { error: 'Sign in/up failed. Please try again.' }
 			}
@@ -65,16 +66,57 @@ const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError 
 		{ error: null }
 	)
 
+	return (
+		<Form ref={formRef} method="post" action={formAction} noValidate>
+			{isSignUp && (
+				<Input
+					id="displayName"
+					name="displayName"
+					label="Display Name"
+					type="text"
+					placeholder="Enter your name"
+					disabled={isPending}
+					autoComplete="name"
+					required
+				/>
+			)}
+			<Input
+				id="email"
+				name="email"
+				label="Email"
+				type="email"
+				placeholder="Enter your email"
+				disabled={isPending}
+				autoComplete="email"
+				required
+			/>
+			<Input
+				id="password"
+				name="password"
+				label="Password"
+				type="password"
+				placeholder="Enter your password"
+				disabled={isPending}
+				autoComplete={isSignUp ? 'new-password' : 'current-password'}
+				required
+			/>
+			<input id="mode" type="hidden" name="mode" value={isSignUp ? 'signup' : 'signin'} />
+
+			{(state.error || externalError) && (
+				<ErrorMessage>{state.error || externalError}</ErrorMessage>
+			)}
+
+			<SubmitButton>{isSignUp ? 'Sign Up' : 'Sign In'}</SubmitButton>
+		</Form>
+	)
+}
+
+const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError }) => {
+	const [isSignUp, setIsSignUp] = useState(false)
+
 	const toggleMode = () => {
 		setIsSignUp(!isSignUp)
-		formRef.current?.reset() // reset native input values
-		setFormKey(k => k + 1) // force React remount form subtree
-		setLocalError(null) // reset error message
 	}
-
-	useEffect(() => {
-		setLocalError(state.error)
-	}, [state.error])
 
 	return (
 		<FormContainer key={isSignUp ? 'signup' : 'signin'}>
@@ -85,50 +127,13 @@ const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError 
 				</Subtitle>
 			</Header>
 
-			<Form ref={formRef} key={formKey} method="post" action={formAction} noValidate>
-				{isSignUp && (
-					<Input
-						id="displayName"
-						name="displayName"
-						label="Display Name"
-						type="text"
-						placeholder="Enter your name"
-						disabled={isPending}
-						autoComplete="name"
-						required
-					/>
-				)}
-
-				<Input
-					id="email"
-					name="email"
-					label="Email"
-					type="email"
-					placeholder="Enter your email"
-					disabled={isPending}
-					autoComplete="email"
-					required
-				/>
-
-				<Input
-					id="password"
-					name="password"
-					label="Password"
-					type="password"
-					placeholder="Enter your password"
-					disabled={isPending}
-					autoComplete={isSignUp ? 'new-password' : 'current-password'}
-					required
-				/>
-
-				<input id="mode" type="hidden" name="mode" value={isSignUp ? 'signup' : 'signin'} />
-
-				{(localError || externalError) && (
-					<ErrorMessage>{localError || externalError}</ErrorMessage>
-				)}
-
-				<SubmitButton>{isSignUp ? 'Sign Up' : 'Sign In'}</SubmitButton>
-			</Form>
+			<InnerForm
+				key={isSignUp ? 'signup' : 'signin'}
+				isSignUp={isSignUp}
+				onSignIn={onSignIn}
+				onSignUp={onSignUp}
+				externalError={externalError}
+			/>
 
 			<Footer>
 				<ToggleButton type="button" onClick={toggleMode}>
