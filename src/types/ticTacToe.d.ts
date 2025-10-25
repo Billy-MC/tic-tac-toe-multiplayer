@@ -26,6 +26,13 @@ export interface GameState {
 	result?: GameResult
 }
 
+type RTDBServerTimestamp = ReturnType<typeof serverTimestamp>
+type GameWrite = Omit<GameState, 'createdAt' | 'updatedAt'> & {
+	createdAt: number | RTDBServerTimestamp
+	updatedAt: number | RTDBServerTimestamp
+}
+type GameUpdate = Partial<GameWrite>
+
 export interface User {
 	id: string
 	email: string

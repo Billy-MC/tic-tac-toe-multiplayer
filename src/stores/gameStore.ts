@@ -1,6 +1,8 @@
 import type { GameState, GameListItem } from '@/types/ticTacToe'
 import { create } from 'zustand'
 
+import { gameService } from '@/infrastructure/FirebaseGameService'
+
 interface GameStore {
 	currentGame: GameState | null
 	availableGames: GameListItem[]
@@ -17,7 +19,7 @@ interface GameStore {
 	clearError: () => void
 }
 
-const useGameStore = create<GameStore>((set, get) => ({
+const useGameStore = create<GameStore>((set, __get) => ({
 	currentGame: null,
 	availableGames: [],
 	isLoading: false,
@@ -26,12 +28,8 @@ const useGameStore = create<GameStore>((set, get) => ({
 	createGame: async (userId: string, userName: string) => {
 		try {
 			set({ isLoading: true, error: null })
-			const gameId = '123' // TODO: Fake data first
-			// Simulate API call
-			await new Promise(resolve => setTimeout(resolve, 1000))
-			set({
-				isLoading: false,
-			})
+			const gameId = await gameService.createGame(userId, userName)
+			set({ isLoading: false })
 			return gameId
 		} catch (error: unknown) {
 			const errorMessage = error instanceof Error ? error.message : 'Failed to create game'
@@ -45,10 +43,8 @@ const useGameStore = create<GameStore>((set, get) => ({
 	joinGame: async (gameId: string, userId: string) => {
 		try {
 			set({ isLoading: true, error: null })
-			await new Promise(resolve => setTimeout(resolve, 1000))
-			set({
-				isLoading: false,
-			})
+			await gameService.joinGame(gameId, userId)
+			set({ isLoading: false })
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : 'Failed to join game'
 
@@ -61,86 +57,37 @@ const useGameStore = create<GameStore>((set, get) => ({
 	makeMove: async (gameId: string, cellIndex: number, userId: string) => {
 		try {
 			set({ error: null })
-			// Simulate API call
-			await new Promise(resolve => setTimeout(resolve, 500))
+			await gameService.makeMove(gameId, cellIndex, userId)
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : 'Failed to make move'
-
 			set({ error: errorMessage, isLoading: false })
-
 			throw new Error(errorMessage)
 		}
 	},
 
 	leaveGame: async (gameId: string, userId: string) => {
 		try {
-			// Simulate API call
-			await new Promise(resolve => setTimeout(resolve, 500))
+			await gameService.leaveGame(gameId, userId)
 			set({ currentGame: null })
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : 'Failed to leave game'
-
 			set({ error: errorMessage, isLoading: false })
-
 			throw new Error(errorMessage)
 		}
 	},
 
 	subscribeToGame: (gameId: string) => {
-		const game: GameState = {
-			id: 'game_1',
-			board: [null, null, null, null, null, null, null, null, null],
-			currentPlayer: 'X',
-			status: 'waiting',
-			players: {
-				X: 'user_1',
-				O: null,
-			},
-			createdAt: Date.now() - 5 * 60 * 1000,
-			updatedAt: Date.now() - 5 * 60 * 1000,
-		}
-		return () => {
+		const gameSubscription = gameService.listenToGame(gameId, game => {
 			set({ currentGame: game })
-		}
+		})
+		return gameSubscription
 	},
 
 	subscribeToAvailableGames: () => {
-		const games: GameListItem[] = [
-			{
-				id: 'game_1',
-				status: 'waiting',
-				creatorName: 'Alice',
-				createdAt: Date.now() - 1 * 60 * 1000,
-			},
-			{
-				id: 'game_2',
-				status: 'playing',
-				creatorName: 'Bob',
-				createdAt: Date.now() - 20 * 60 * 1000,
-			},
-			{
-				id: 'game_3',
-				status: 'finished',
-				creatorName: 'Charlie',
-				createdAt: Date.now() - 3 * 60 * 60 * 1000,
-			},
-			{
-				id: 'game_4',
-				status: 'waiting',
-				creatorName: 'Diana',
-				createdAt: Date.now() - 12 * 60 * 60 * 1000,
-			},
-			{
-				id: 'game_5',
-				status: 'finished',
-				creatorName: 'Ethan',
-				createdAt: Date.now() - 2 * 24 * 60 * 60 * 1000,
-			},
-		]
-
-		return () => {
+		const availableGamesSubscription = gameService.listenToAvailableGames(games => {
 			set({ availableGames: games })
-		}
+		})
+		return availableGamesSubscription
 	},
 
 	clearGame: () => set({ currentGame: null, error: null }),
