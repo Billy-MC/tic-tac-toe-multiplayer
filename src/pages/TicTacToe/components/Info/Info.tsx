@@ -12,6 +12,7 @@ interface InfoProps {
 type StatusKey = 'win:me' | 'win:opponent' | 'draw' | 'turn:me' | 'turn:opponent'
 type StatusVariant = 'win' | 'lose' | 'draw' | 'yourTurn' | 'waiting'
 
+// Map status keys to messages
 const MESSAGES: Record<StatusKey, string> = {
 	'win:me': 'You won!',
 	'win:opponent': 'You lost!',
@@ -20,6 +21,7 @@ const MESSAGES: Record<StatusKey, string> = {
 	'turn:opponent': 'Waiting for opponent...',
 }
 
+// Map status keys to variants for styling
 const VARIANT_MAP: Record<StatusKey, StatusVariant> = {
 	'win:me': 'win',
 	'win:opponent': 'lose',
@@ -28,6 +30,7 @@ const VARIANT_MAP: Record<StatusKey, StatusVariant> = {
 	'turn:opponent': 'waiting',
 }
 
+// Determine the status key based on the game state
 const computeStatusKey = (
 	currentPlayer: Player,
 	mySymbol: Player | null | '',
@@ -43,6 +46,7 @@ const computeStatusKey = (
 	return mySymbol === currentPlayer ? 'turn:me' : 'turn:opponent'
 }
 
+// Info component to display game status
 const Info: FC<InfoProps> = ({ currentPlayer, mySymbol, result }) => {
 	const statusKey = computeStatusKey(currentPlayer, mySymbol, result)
 

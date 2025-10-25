@@ -37,6 +37,7 @@ interface LobbyProps {
 	userName: string
 }
 
+// Format the date into a human-readable string
 const formatDate = (timestamp: number): string => {
 	const date = new Date(timestamp)
 	const now = new Date()
@@ -56,6 +57,7 @@ const formatDate = (timestamp: number): string => {
 	return format(date, 'MMM d, yyyy')
 }
 
+// Lobby component to display available games and allow creating/joining games
 const Lobby: FC<LobbyProps> = ({ games, onCreateGame, onJoinGame, isLoading, userName }) => {
 	return (
 		<LobbyContainer>

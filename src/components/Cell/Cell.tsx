@@ -9,9 +9,10 @@ interface CellProps {
 	isDisabled: boolean
 }
 
+// Cell component to represent a single cell in the Tic Tac Toe board
 const Cell: FC<CellProps> = ({ value, onClick, isWinningCell, isDisabled }) => {
+	// Determine if the cell has a value
 	const hasValue = value !== null && value !== ''
-
 	const shouldDisable = isDisabled || hasValue
 
 	const handleClick = () => {

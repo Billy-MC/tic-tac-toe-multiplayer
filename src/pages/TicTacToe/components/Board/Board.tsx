@@ -11,6 +11,7 @@ interface BoardProps {
 	winningLine?: number[]
 }
 
+// Board component to render the Tic Tac Toe board
 const Board: FC<BoardProps> = ({ board, onCellClick, isMyTurn, winningLine = [] }) => {
 	return (
 		<BoardGrid role="grid" aria-label="tic tac toe board">

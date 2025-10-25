@@ -23,6 +23,7 @@ import {
 } from './TicTacToePage.style'
 import { Spinner } from '@/components/Button/Button.style'
 
+// Main TicTacToePage component
 const TicTacToePage: FC = () => {
 	const {
 		user,
@@ -192,7 +193,7 @@ const TicTacToePage: FC = () => {
 									onJoinGame={handleJoinGame}
 									onCreateGame={handleCreateGame}
 									isLoading={gameLoading}
-									userName="Player 1"
+									userName={user.displayName}
 								/>
 							)}
 						</FirebaseErrorBoundary>

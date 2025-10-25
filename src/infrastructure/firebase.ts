@@ -3,6 +3,7 @@ import { getAuth } from 'firebase/auth'
 import { getDatabase } from 'firebase/database'
 import { ENV } from '@/env'
 
+// Firebase configuration
 const firebaseConfig: FirebaseOptions = {
 	apiKey: ENV.VITE_FIREBASE_API_KEY,
 	authDomain: ENV.VITE_FIREBASE_AUTH_DOMAIN,

@@ -32,16 +32,18 @@ const SubmitButton: FC<{ children: React.ReactNode }> = ({ children }) => {
 			size="lg"
 			isLoading={pending}
 			disabled={pending}
-			aria-busy={pending}
+			aria-busy={pending} // for accessibility and testing
 		>
 			{children}
 		</FullWidthButton>
 	)
 }
 
+// Inner form component handling sign in/up logic
 const InnerForm: FC<InnerFormProps> = ({ isSignUp, onSignIn, onSignUp, externalError }) => {
 	const formRef = useRef<HTMLFormElement>(null)
 
+	// Handle form submission with action state
 	const [state, formAction, isPending] = useActionState(
 		async (_prev: { error: string | null }, formData: FormData) => {
 			const email = String(formData.get('email') || '')

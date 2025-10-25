@@ -40,15 +40,18 @@ class ErrorBoundary extends Component<Props, State> {
 		}
 	}
 
+	// Derive state from error
 	static getDerivedStateFromError(error: Error): State {
 		return { hasError: true, error, errorInfo: null }
 	}
 
+	// Log error information
 	override componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
 		this.setState({ error, errorInfo })
 		logger.error('Uncaught error:', error, errorInfo)
 	}
 
+	// Reset error boundary state
 	handleReset = (): void => {
 		this.setState({ hasError: false, error: null, errorInfo: null })
 		this.props.onReset?.()

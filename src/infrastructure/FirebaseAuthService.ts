@@ -55,6 +55,7 @@ class FirebaseAuthService implements IAuthService {
 	}
 
 	onAuthStateChanged(callback: (user: User | null) => void): () => void {
+		// Listen for auth state changes
 		const unsubscribe = firebaseOnAuthStateChanged(auth, firebaseUser => {
 			callback(firebaseUser ? mapFirebaseUserToUser(firebaseUser) : null)
 		})
