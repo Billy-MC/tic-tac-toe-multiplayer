@@ -1,4 +1,4 @@
-import { baseTitleStyle, cardBase, pulseSlow } from '@/components/SharedStyled/mixin'
+import { baseTitleStyle, cardBase } from '@/components/SharedStyled/mixin'
 import styled from 'styled-components'
 
 const GameContainer = styled.div`
@@ -20,12 +20,6 @@ const Title = styled.h2`
 const WaitingState = styled.div`
 	text-align: center;
 	padding: 3rem 0;
-`
-
-const WaitingIcon = styled.div`
-	animation: ${pulseSlow} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-	font-size: 3.75rem;
-	margin-bottom: 1rem;
 `
 
 const WaitingTitle = styled.p`
@@ -71,7 +65,6 @@ export {
 	Header,
 	Title,
 	WaitingState,
-	WaitingIcon,
 	WaitingTitle,
 	WaitingDescription,
 	GameIdBox,

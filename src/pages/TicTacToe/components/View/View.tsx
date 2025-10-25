@@ -14,7 +14,6 @@ import {
 	Header,
 	Title,
 	WaitingDescription,
-	WaitingIcon,
 	WaitingState,
 } from './View.style'
 
@@ -65,7 +64,6 @@ const View: FC<ViewProps> = ({ game, userId, onMakeMove, onLeaveGame, error }) =
 
 			{isWaiting ? (
 				<WaitingState>
-					<WaitingIcon>⏳</WaitingIcon>
 					<Title>Waiting for an opponent...</Title>
 					<WaitingDescription>
 						Share this game with a friend to start playing!

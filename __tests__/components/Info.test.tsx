@@ -92,7 +92,7 @@ describe('GameInfo Component', () => {
 		expect(screen.getByText(/Waiting for opponent/i)).toBeInTheDocument()
 	})
 
-	it('shows appropriate emoji for each game state', () => {
+	it('shows appropriate text for each game state', () => {
 		const { rerender } = render(<Info currentPlayer="X" mySymbol="X" />)
 		expect(screen.getByText(/Your turn!/)).toBeInTheDocument()
 
