@@ -29,6 +29,14 @@ export default defineConfig([
 				},
 			],
 			'no-console': ['error', { allow: ['warn', 'error'] }],
+			'@typescript-eslint/no-unused-vars': [
+				'error',
+				{
+					argsIgnorePattern: '^_',
+					varsIgnorePattern: '^_',
+					caughtErrorsIgnorePattern: '^_',
+				},
+			],
 		},
 	},
 	{

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { cardBase } from '../SharedStyled/mixin'
+import { cardBase } from '@/components/SharedStyled/mixin'
 
 const ErrorContainer = styled.div`
 	min-height: 100vh;

@@ -11,7 +11,6 @@ import { AppContainer, Container, Header, Main, Subtitle, Title } from './TicTac
 
 const TicTacToePage: FC = () => {
 	const [currentGameId, setCurrentGameId] = useState<string | null>(null)
-
 	const {
 		currentGame,
 		availableGames,

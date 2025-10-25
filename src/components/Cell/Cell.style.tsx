@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { pulseSlow } from '../SharedStyled/mixin'
+import { pulseSlow } from '@/components/SharedStyled/mixin'
 
 const StyledCell = styled.button<{
 	$isDisabled: boolean

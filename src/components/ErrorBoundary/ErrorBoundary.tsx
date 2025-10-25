@@ -64,7 +64,6 @@ class ErrorBoundary extends Component<Props, State> {
 				<ErrorContainer>
 					<ErrorCard>
 						<ErrorContent>
-							<ErrorIcon>😔</ErrorIcon>
 							<ErrorTitle>Oops! Something went wrong</ErrorTitle>
 							<ErrorMessage>
 								We're sorry for the inconvenience. The application encountered an

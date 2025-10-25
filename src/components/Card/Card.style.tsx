@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { baseTitleStyle } from '../SharedStyled/mixin'
-import { StyledCard } from '../SharedStyled/SharedStyled'
+import { baseTitleStyle } from '@/components/SharedStyled/mixin'
+import { StyledCard } from '@/components/SharedStyled/SharedStyled'
 
 const CardTitle = styled.h2`
 	${baseTitleStyle};
