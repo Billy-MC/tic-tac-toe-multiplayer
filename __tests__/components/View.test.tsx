@@ -13,7 +13,7 @@ describe('View Component', () => {
 
 	const createMockGame = (overrides?: Partial<GameState>): GameState => ({
 		id: 'game123',
-		board: [null, null, null, null, null, null, null, null, null],
+		board: ['', '', '', '', '', '', '', '', ''],
 		currentPlayer: 'X',
 		status: 'playing',
 		players: {
@@ -158,7 +158,7 @@ describe('View Component', () => {
 
 		it('displays board state correctly', () => {
 			const game = createMockGame({
-				board: ['X', 'O', 'X', null, null, null, null, null, null],
+				board: ['X', 'O', 'X', '', '', '', '', '', ''],
 			})
 
 			render(<View {...defaultProps} game={game} />)

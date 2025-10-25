@@ -7,7 +7,7 @@ import Board from '../../src/pages/TicTacToe/components/Board'
 import { Board as BoardType } from '../../src/types/ticTacToe'
 
 describe('GameBoard Component', () => {
-	const emptyBoard: BoardType = [null, null, null, null, null, null, null, null, null]
+	const emptyBoard: BoardType = ['', '', '', '', '', '', '', '', '']
 
 	it('renders 9 cells', () => {
 		render(<Board board={emptyBoard} onCellClick={() => {}} isMyTurn={true} />)
@@ -17,7 +17,7 @@ describe('GameBoard Component', () => {
 	})
 
 	it('displays board state correctly', () => {
-		const board: BoardType = ['X', 'O', 'X', null, 'O', null, null, null, null]
+		const board: BoardType = ['X', 'O', 'X', '', 'O', '', '', '', '']
 
 		render(<Board board={board} onCellClick={() => {}} isMyTurn={true} />)
 
@@ -79,7 +79,7 @@ describe('GameBoard Component', () => {
 	})
 
 	it('renders game in progress correctly', () => {
-		const board: BoardType = ['X', 'O', null, 'X', 'O', null, null, null, null]
+		const board: BoardType = ['X', 'O', '', 'X', 'O', '', '', '', '']
 
 		render(<Board board={board} onCellClick={() => {}} isMyTurn={true} />)
 
@@ -96,7 +96,7 @@ describe('GameBoard Component', () => {
 	it('does not call onClick for occupied cells', async () => {
 		const handleCellClick = vi.fn()
 		const user = userEvent.setup()
-		const board: BoardType = ['X', null, null, null, null, null, null, null, null]
+		const board: BoardType = ['X', '', '', '', '', '', '', '', '']
 
 		render(<Board board={board} onCellClick={handleCellClick} isMyTurn={true} />)
 
