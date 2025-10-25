@@ -40,7 +40,7 @@ const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError 
 	const formRef = useRef<HTMLFormElement>(null)
 
 	const [state, formAction, isPending] = useActionState(
-		async (prev: { error: string | null }, formData: FormData) => {
+		async (_prev: { error: string | null }, formData: FormData) => {
 			const email = String(formData.get('email') || '')
 			const password = String(formData.get('password') || '')
 			const displayName = String(formData.get('displayName') || '')

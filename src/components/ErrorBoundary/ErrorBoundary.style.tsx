@@ -40,6 +40,26 @@ const ErrorMessage = styled.p`
 	margin-bottom: 1.5rem;
 `
 
+const ErrorList = styled.ul`
+	text-align: left;
+	color: ${props => props.theme.colors.textPrimary};
+	margin-bottom: 1.5rem;
+	list-style: none;
+	padding: 0;
+`
+
+const ErrorListItem = styled.li`
+	display: flex;
+	align-items: flex-start;
+	margin-bottom: 0.5rem;
+
+	&::before {
+		content: '•';
+		margin-right: 0.5rem;
+		flex-shrink: 0;
+	}
+`
+
 const ErrorDetails = styled.div`
 	margin-bottom: 1.5rem;
 	text-align: left;
@@ -102,25 +122,44 @@ const StyledButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`
 			? `
     background-color: ${props.theme.colors.secondary};
     color: white;
-    
+
     &:hover {
-      background-color: ${props.theme.colors.secondaryHover};
+		background-color: ${props.theme.colors.secondaryHover};
     }
-  `
+		`
 			: `
     background-color: ${props.theme.colors.primary};
     color: white;
-    
+
     &:hover {
-      background-color: ${props.theme.colors.primaryHover};
+		background-color: ${props.theme.colors.primaryHover};
     }
-  `}
+	`}
+`
+
+const ButtonContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
 `
 
 const FooterNote = styled.p`
 	font-size: ${props => props.theme.fontSize.sm};
 	color: ${props => props.theme.colors.textLight};
 	margin-top: 1.5rem;
+`
+
+const TipBox = styled.div`
+	margin-top: 1.5rem;
+	padding: 1rem;
+	background-color: ${props => props.theme.colors.primaryLight};
+	border-radius: ${props => props.theme.borderRadius.lg};
+	font-size: ${props => props.theme.fontSize.sm};
+	color: ${props => props.theme.colors.textPrimary};
+
+	strong {
+		font-weight: ${props => props.theme.fontWeight.semibold};
+	}
 `
 
 export {
@@ -137,4 +176,8 @@ export {
 	ButtonGroup,
 	StyledButton,
 	FooterNote,
+	ErrorList,
+	ErrorListItem,
+	ButtonContainer,
+	TipBox,
 }
