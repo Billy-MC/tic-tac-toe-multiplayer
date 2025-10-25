@@ -179,14 +179,16 @@ const TicTacToePage: FC = () => {
 							{currentGame ? (
 								<View
 									game={currentGame}
-									userId="user_1"
+									userId={user.id}
 									onMakeMove={handleMakeMove}
 									onLeaveGame={handleLeaveGame}
 									error={gameError}
 								/>
 							) : (
 								<Lobby
-									games={availableGames}
+									games={availableGames.filter(
+										game => game.creatorId !== user.id
+									)}
 									onJoinGame={handleJoinGame}
 									onCreateGame={handleCreateGame}
 									isLoading={gameLoading}

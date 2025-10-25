@@ -12,6 +12,7 @@ const firebaseConfig: FirebaseOptions = {
 		ENV.VITE_FIREBASE_STORAGE_BUCKET ?? `${ENV.VITE_FIREBASE_PROJECT_ID}.appspot.com`,
 	messagingSenderId: ENV.VITE_FIREBASE_MESSAGING_SENDER_ID,
 	appId: ENV.VITE_FIREBASE_APP_ID,
+	measurementId: ENV.VITE_MEASUREMENT_ID,
 }
 
 // Initialize Firebase

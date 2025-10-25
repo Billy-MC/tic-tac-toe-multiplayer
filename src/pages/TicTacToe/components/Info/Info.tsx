@@ -30,7 +30,7 @@ const VARIANT_MAP: Record<StatusKey, StatusVariant> = {
 
 const computeStatusKey = (
 	currentPlayer: Player,
-	mySymbol: Player | null,
+	mySymbol: Player | null | '',
 	result?: GameResult
 ): StatusKey => {
 	if (result?.type === 'win') {
@@ -38,7 +38,7 @@ const computeStatusKey = (
 	}
 	if (result?.type === 'draw') return 'draw'
 
-	if (mySymbol === null) return 'turn:opponent'
+	if (mySymbol === '') return 'turn:opponent'
 
 	return mySymbol === currentPlayer ? 'turn:me' : 'turn:opponent'
 }

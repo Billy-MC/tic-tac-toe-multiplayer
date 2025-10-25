@@ -15,6 +15,7 @@ const EnvSchema = z
 			.string()
 			.min(1, 'VITE_FIREBASE_MESSAGING_SENDER_ID is required'),
 		VITE_FIREBASE_APP_ID: z.string().min(1, 'VITE_FIREBASE_APP_ID is required'),
+		VITE_MEASUREMENT_ID: z.string().min(1, 'VITE_MEASUREMENT_ID is required'),
 
 		MODE: z.string().optional(),
 		DEV: z.boolean().optional(),
@@ -31,7 +32,7 @@ const raw = {
 	VITE_FIREBASE_STORAGE_BUCKET: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
 	VITE_FIREBASE_MESSAGING_SENDER_ID: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
 	VITE_FIREBASE_APP_ID: import.meta.env.VITE_FIREBASE_APP_ID,
-
+	VITE_MEASUREMENT_ID: import.meta.env.VITE_MEASUREMENT_ID,
 	MODE: import.meta.env.MODE,
 	DEV: import.meta.env.DEV,
 	PROD: import.meta.env.PROD,

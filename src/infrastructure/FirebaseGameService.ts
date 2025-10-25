@@ -46,6 +46,8 @@ class FirebaseGameService implements IGameService {
 				X: userId,
 				O: null,
 			},
+			creatorName: userName,
+			creatorId: userId,
 			createdAt: serverTimestamp(),
 			updatedAt: serverTimestamp(),
 		}
@@ -152,7 +154,8 @@ class FirebaseGameService implements IGameService {
 					.map(([id, game]) => ({
 						id,
 						status: game.status,
-						creatorName: game.creatorName ?? 'Unknown',
+						creatorName: game.creatorName || 'Unknown',
+						creatorId: game.creatorId || game.players?.X || '',
 						createdAt: game.createdAt,
 					}))
 					.sort((a, b) => b.createdAt - a.createdAt)

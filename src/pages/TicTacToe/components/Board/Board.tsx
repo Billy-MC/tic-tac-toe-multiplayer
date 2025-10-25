@@ -14,16 +14,18 @@ interface BoardProps {
 const Board: FC<BoardProps> = ({ board, onCellClick, isMyTurn, winningLine = [] }) => {
 	return (
 		<BoardGrid role="grid" aria-label="tic tac toe board">
-			{board.map((cellValue, index) => (
-				<Cell
-					key={index}
-					value={cellValue}
-					onClick={() => onCellClick(index)}
-					isDisabled={!isMyTurn || cellValue !== null}
-					isWinningCell={winningLine.includes(index)}
-					aria-label={`cell ${index} ${cellValue ?? 'empty'}`}
-				/>
-			))}
+			{board.map((cellValue, index) => {
+				return (
+					<Cell
+						key={index}
+						value={cellValue}
+						onClick={() => onCellClick(index)}
+						isDisabled={!isMyTurn || cellValue !== ''}
+						isWinningCell={winningLine.includes(index)}
+						aria-label={`cell ${index} ${cellValue ?? 'empty'}`}
+					/>
+				)
+			})}
 		</BoardGrid>
 	)
 }

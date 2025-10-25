@@ -2,7 +2,7 @@ import { useEffect, useState, type FC } from 'react'
 
 import { GameState, Player } from '@/types/ticTacToe'
 import Board from '@/pages/TicTacToe/components/Board'
-import GameInfo from '@/pages/TicTacToe/components/Info'
+import Info from '@/pages/TicTacToe/components/Info'
 import Button from '@/components/Button'
 
 import {
@@ -74,7 +74,7 @@ const View: FC<ViewProps> = ({ game, userId, onMakeMove, onLeaveGame, error }) =
 				</WaitingState>
 			) : (
 				<>
-					<GameInfo
+					<Info
 						currentPlayer={game.currentPlayer}
 						mySymbol={mySymbol}
 						result={game.result}

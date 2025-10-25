@@ -12,10 +12,12 @@ const WINNING_LINES: ReadonlyArray<readonly [number, number, number]> = [
 ]
 
 // Create an empty tic-tac-toe board
-export const createEmptyBoard = (): Board => Array(9).fill(null)
+export const createEmptyBoard = (): Board => Array(9).fill('')
 
-// Checks if a cell is empty (null)
-export const isCellEmpty = (board: Board, index: number): boolean => board[index] === null
+// Checks if a cell is empty ('')
+export const isCellEmpty = (board: Board, index: number): boolean => {
+	return board[index] === null || board[index] === ''
+}
 
 // Move on the board
 export const makeMove = (board: Board, index: number, player: Player): Board => {
@@ -28,7 +30,7 @@ export const makeMove = (board: Board, index: number, player: Player): Board => 
 }
 
 // Checks if the board is full
-export const isBoardFull = (board: Board): boolean => board.every(cell => cell !== null)
+export const isBoardFull = (board: Board): boolean => board.every(cell => cell !== '')
 
 // Checks if there is a winning line for the given player
 const checkWinningLine = (

@@ -1,5 +1,5 @@
 export type Player = 'X' | 'O'
-export type CellValue = Player | null
+export type CellValue = Player | null | ''
 export type Board = CellValue[]
 
 export type GameStatus =
@@ -24,6 +24,8 @@ export interface GameState {
 	createdAt: number
 	updatedAt: number
 	result?: GameResult
+	creatorName?: string
+	creatorId?: string
 }
 
 type RTDBServerTimestamp = ReturnType<typeof serverTimestamp>
@@ -44,4 +46,5 @@ export interface GameListItem {
 	status: GameStatus
 	creatorName: string
 	createdAt: number
+	creatorId: string
 }
