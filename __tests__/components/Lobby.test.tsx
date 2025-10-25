@@ -52,8 +52,20 @@ describe('Lobby Component', () => {
 	describe('Game List', () => {
 		it('renders list of available games', () => {
 			const games: GameListItem[] = [
-				{ id: 'game1', creatorName: 'Alice', status: 'playing', createdAt: Date.now() },
-				{ id: 'game2', creatorName: 'Bob', status: 'playing', createdAt: Date.now() },
+				{
+					id: 'game1',
+					creatorName: 'Alice',
+					status: 'playing',
+					creatorId: 'user1',
+					createdAt: Date.now(),
+				},
+				{
+					id: 'game2',
+					creatorName: 'Bob',
+					status: 'playing',
+					creatorId: 'user2',
+					createdAt: Date.now(),
+				},
 			]
 
 			render(<Lobby {...defaultProps} games={games} />)
@@ -64,8 +76,20 @@ describe('Lobby Component', () => {
 
 		it('displays creator avatars with correct initials', () => {
 			const games: GameListItem[] = [
-				{ id: 'game1', creatorName: 'Alice', status: 'playing', createdAt: Date.now() },
-				{ id: 'game2', creatorName: 'Bob', status: 'playing', createdAt: Date.now() },
+				{
+					id: 'game1',
+					creatorName: 'Alice',
+					status: 'playing',
+					creatorId: 'user1',
+					createdAt: Date.now(),
+				},
+				{
+					id: 'game2',
+					creatorName: 'Bob',
+					status: 'playing',
+					creatorId: 'user2',
+					createdAt: Date.now(),
+				},
 			]
 
 			render(<Lobby {...defaultProps} games={games} />)
@@ -76,8 +100,20 @@ describe('Lobby Component', () => {
 
 		it('shows join button for each game', () => {
 			const games: GameListItem[] = [
-				{ id: 'game1', creatorName: 'Alice', status: 'playing', createdAt: Date.now() },
-				{ id: 'game2', creatorName: 'Bob', status: 'playing', createdAt: Date.now() },
+				{
+					id: 'game1',
+					creatorName: 'Alice',
+					status: 'playing',
+					creatorId: 'user1',
+					createdAt: Date.now(),
+				},
+				{
+					id: 'game2',
+					creatorName: 'Bob',
+					status: 'playing',
+					creatorId: 'user2',
+					createdAt: Date.now(),
+				},
 			]
 
 			render(<Lobby {...defaultProps} games={games} />)
@@ -89,7 +125,13 @@ describe('Lobby Component', () => {
 		it('displays time ago for game creation', () => {
 			const now = Date.now()
 			const games: GameListItem[] = [
-				{ id: 'game1', creatorName: 'Alice', status: 'waiting', createdAt: now },
+				{
+					id: 'game1',
+					creatorName: 'Alice',
+					status: 'waiting',
+					creatorId: 'user1',
+					createdAt: now,
+				},
 			]
 
 			render(<Lobby {...defaultProps} games={games} />)
@@ -104,6 +146,7 @@ describe('Lobby Component', () => {
 					id: 'game1',
 					creatorName: 'Alice',
 					status: 'waiting',
+					creatorId: 'user1',
 					createdAt: twoHoursAgo,
 				},
 			]
@@ -128,7 +171,13 @@ describe('Lobby Component', () => {
 		it('calls onJoinGame with correct game id when join button is clicked', async () => {
 			const user = userEvent.setup()
 			const games: GameListItem[] = [
-				{ id: 'game1', creatorName: 'Alice', status: 'waiting', createdAt: Date.now() },
+				{
+					id: 'game1',
+					creatorName: 'Alice',
+					status: 'waiting',
+					creatorId: 'user1',
+					createdAt: Date.now(),
+				},
 			]
 
 			render(<Lobby {...defaultProps} games={games} />)
@@ -141,8 +190,20 @@ describe('Lobby Component', () => {
 		it('calls onJoinGame with correct id when multiple games exist', async () => {
 			const user = userEvent.setup()
 			const games: GameListItem[] = [
-				{ id: 'game1', creatorName: 'Alice', status: 'waiting', createdAt: Date.now() },
-				{ id: 'game2', creatorName: 'Bob', status: 'waiting', createdAt: Date.now() },
+				{
+					id: 'game1',
+					creatorName: 'Alice',
+					status: 'waiting',
+					creatorId: 'user1',
+					createdAt: Date.now(),
+				},
+				{
+					id: 'game2',
+					creatorName: 'Bob',
+					status: 'waiting',
+					creatorId: 'user2',
+					createdAt: Date.now(),
+				},
 			]
 
 			render(<Lobby {...defaultProps} games={games} />)
@@ -167,7 +228,13 @@ describe('Lobby Component', () => {
 
 		it('disables join buttons when loading', () => {
 			const games: GameListItem[] = [
-				{ id: 'game1', creatorName: 'Alice', status: 'waiting', createdAt: Date.now() },
+				{
+					id: 'game1',
+					creatorName: 'Alice',
+					status: 'waiting',
+					creatorId: 'user1',
+					createdAt: Date.now(),
+				},
 			]
 
 			render(<Lobby {...defaultProps} games={games} isLoading={true} />)

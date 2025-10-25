@@ -1,8 +1,8 @@
-const isDev = import.meta.env.MODE === 'development'
+const isDevOrTest = ['development', 'test'].includes(import.meta.env.MODE)
 
 export const logger = {
 	info: (...args: unknown[]) => {
-		if (isDev) console.info('[INFO]', ...args)
+		if (isDevOrTest) console.info('[INFO]', ...args)
 	},
 	warn: (...args: unknown[]) => {
 		console.warn('[WARN]', ...args)

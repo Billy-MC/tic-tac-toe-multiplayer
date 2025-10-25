@@ -47,11 +47,12 @@ const formatDate = (timestamp: number): string => {
 	const diffDays = differenceInDays(now, date)
 
 	if (diffMins < 1) return 'just now'
+
+	if (isYesterday(date)) return `Yesterday ${format(date, 'p')}`
+
 	if (diffMins < 60) return `${diffMins}m ago`
 	if (diffHours < 24) return `${diffHours}h ago`
-
 	if (isToday(date)) return `Today ${format(date, 'p')}`
-	if (isYesterday(date)) return `Yesterday ${format(date, 'p')}`
 	if (diffDays < 7) return `${diffDays}d ago`
 
 	return format(date, 'MMM d, yyyy')
