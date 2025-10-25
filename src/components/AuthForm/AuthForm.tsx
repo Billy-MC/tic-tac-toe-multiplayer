@@ -81,6 +81,7 @@ const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError 
 			<Form key={formKey} ref={formRef} method="post" action={formAction}>
 				{isSignUp && (
 					<Input
+						id="displayName"
 						name="displayName"
 						label="Display Name"
 						type="text"
@@ -92,6 +93,7 @@ const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError 
 				)}
 
 				<Input
+					id="email"
 					name="email"
 					label="Email"
 					type="email"
@@ -102,6 +104,7 @@ const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError 
 				/>
 
 				<Input
+					id="password"
 					name="password"
 					label="Password"
 					type="password"
@@ -111,7 +114,7 @@ const AuthForm: FC<AuthFormProps> = ({ onSignIn, onSignUp, error: externalError 
 					required
 				/>
 
-				<input type="hidden" name="mode" value={isSignUp ? 'signup' : 'signin'} />
+				<input id="mode" type="hidden" name="mode" value={isSignUp ? 'signup' : 'signin'} />
 
 				{(state.error || externalError) && (
 					<ErrorMessage>{state.error || externalError}</ErrorMessage>

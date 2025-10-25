@@ -13,11 +13,11 @@ type StatusKey = 'win:me' | 'win:opponent' | 'draw' | 'turn:me' | 'turn:opponent
 type StatusVariant = 'win' | 'lose' | 'draw' | 'yourTurn' | 'waiting'
 
 const MESSAGES: Record<StatusKey, string> = {
-	'win:me': '🎉 You won!',
-	'win:opponent': '😔 You lost!',
-	draw: "🤝 It's a draw!",
-	'turn:me': '🎮 Your turn!',
-	'turn:opponent': '⏳ Waiting for opponent...',
+	'win:me': 'You won!',
+	'win:opponent': 'You lost!',
+	draw: "It's a draw!",
+	'turn:me': 'Your turn!',
+	'turn:opponent': 'Waiting for opponent...',
 }
 
 const VARIANT_MAP: Record<StatusKey, StatusVariant> = {

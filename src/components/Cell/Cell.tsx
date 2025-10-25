@@ -10,8 +10,12 @@ interface CellProps {
 }
 
 const Cell: FC<CellProps> = ({ value, onClick, isWinningCell, isDisabled }) => {
+	const hasValue = Boolean(value)
+	const blocked = isDisabled || hasValue
+
 	return (
 		<StyledCell
+			disabled={blocked}
 			$isDisabled={isDisabled}
 			$hasValue={Boolean(value)}
 			$isWinningCell={isWinningCell}
