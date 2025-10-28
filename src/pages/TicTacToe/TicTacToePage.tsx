@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import Lobby from '@/pages/TicTacToe/components/Lobby'
 import View from '@/pages/TicTacToe/components/View'
 import Button from '@/components/Button'
@@ -37,6 +37,7 @@ const TicTacToePage: FC = () => {
 	} = useAuthStore()
 
 	const {
+		currentGameId,
 		currentGame,
 		availableGames,
 		isLoading: gameLoading,
@@ -51,31 +52,34 @@ const TicTacToePage: FC = () => {
 		clearError: clearGameError,
 	} = useGameStore()
 
-	const [currentGameId, setCurrentGameId] = useState<string | null>(null)
-
 	// Initialize authentication state
 	useEffect(() => {
 		initializeApp()
 	}, [initializeApp])
 
+	// Subscribe to current game updates
+	useEffect(() => {
+		if (!currentGameId) return
+
+		const unsubscribe = subscribeToGame(currentGameId)
+
+		// Cleanup on unmount or game change
+		return () => {
+			unsubscribe()
+			clearGame()
+		}
+	}, [currentGameId, subscribeToGame, clearGame])
+
 	// Subscribe to available games when not in a game and user is logged in
 	useEffect(() => {
 		if (user && !currentGameId) {
 			const unsubscribe = subscribeToAvailableGames()
-			return () => unsubscribe()
-		}
-	}, [currentGameId, user, subscribeToAvailableGames])
 
-	// Subscribe to current game updates
-	useEffect(() => {
-		if (currentGameId) {
-			const unsubscribe = subscribeToGame(currentGameId)
 			return () => {
 				unsubscribe()
-				clearGame()
 			}
 		}
-	}, [currentGameId, subscribeToGame, clearGame])
+	}, [currentGameId, user, subscribeToAvailableGames])
 
 	// Clear errors when game or auth state changes
 	useEffect(() => {
@@ -86,8 +90,7 @@ const TicTacToePage: FC = () => {
 	const handleCreateGame = async () => {
 		if (!user) return
 		try {
-			const gameId = await createGame(user.id, user.displayName)
-			setCurrentGameId(gameId)
+			await createGame(user.id, user.displayName)
 		} catch (error) {
 			logger.error('Failed to create game:', error)
 		}
@@ -98,7 +101,6 @@ const TicTacToePage: FC = () => {
 
 		try {
 			await joinGame(gameId, user.id)
-			setCurrentGameId(gameId)
 		} catch (error) {
 			logger.error('Failed to join game:', error)
 		}
@@ -117,7 +119,6 @@ const TicTacToePage: FC = () => {
 		if (!user || !currentGameId) return
 		try {
 			await leaveGame(currentGameId, user.id)
-			setCurrentGameId(null)
 		} catch (error) {
 			logger.error('Failed to leave game:', error)
 		}
@@ -128,7 +129,6 @@ const TicTacToePage: FC = () => {
 			if (currentGameId && user) {
 				await leaveGame(currentGameId, user.id)
 			}
-			setCurrentGameId(null)
 			await signOut()
 		} catch (error: unknown) {
 			logger.error('Failed to sign out:', error instanceof Error ? error.message : error)

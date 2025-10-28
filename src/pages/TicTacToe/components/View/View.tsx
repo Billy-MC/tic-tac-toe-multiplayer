@@ -1,4 +1,5 @@
 import { useEffect, useState, type FC } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 
 import { GameState, Player } from '@/types/ticTacToe'
 import Board from '@/pages/TicTacToe/components/Board'
@@ -16,6 +17,10 @@ import {
 	WaitingDescription,
 	WaitingState,
 } from './View.style'
+import usePresenceStore from '@/stores/presenceStore'
+import { useShallow } from 'zustand/shallow'
+import { presenceService } from '@/infrastructure/FirebasePresenceService'
+import OpponentStatus from '../OpponentStatus'
 
 interface ViewProps {
 	game: GameState
@@ -28,19 +33,82 @@ interface ViewProps {
 const View: FC<ViewProps> = ({ game, userId, onMakeMove, onLeaveGame, error }) => {
 	const [mySymbol, setMySymbol] = useState<Player | null>(null)
 
+	const { opponentStatus, setPresence, updateOpponentStatus, clearPresence } = usePresenceStore(
+		useShallow(state => ({
+			opponentStatus: state.opponentStatus,
+			setPresence: state.setPresence,
+			updateOpponentStatus: state.updateOpponentStatus,
+			clearPresence: state.clearPresence,
+		}))
+	)
+
+	const [prevStatus, setPrevStatus] = useState<'online' | 'offline' | 'unknown'>('unknown')
+
+	const gameId = game.id
+	const playersX = game.players.X
+	const playersO = game.players.O
+
 	useEffect(() => {
-		switch (true) {
-			case game.players.X === userId:
-				setMySymbol('X')
-				break
-			case game.players.O === userId:
-				setMySymbol('O')
-				break
-			default:
-				setMySymbol(null)
-				break
+		if (playersX === userId) {
+			setMySymbol('X')
+		} else if (playersO === userId) {
+			setMySymbol('O')
+		} else {
+			setMySymbol(null)
 		}
-	}, [game.players, userId])
+	}, [playersX, playersO, userId])
+
+	useEffect(() => {
+		if (!gameId || !mySymbol) return
+
+		presenceService.setupDisconnectHandler(gameId, mySymbol)
+
+		// Cleanup when leaving
+		return () => {
+			presenceService.cleanupPresence(gameId, mySymbol)
+		}
+	}, [gameId, mySymbol])
+
+	useEffect(() => {
+		if (!gameId) return
+
+		const unsubscribe = presenceService.listenToPresence(gameId, presence => {
+			setPresence(presence)
+
+			if (mySymbol) {
+				updateOpponentStatus(mySymbol)
+			}
+		})
+
+		return () => {
+			unsubscribe()
+			clearPresence()
+		}
+	}, [gameId, setPresence, updateOpponentStatus, clearPresence, mySymbol])
+
+	useEffect(() => {
+		// Skip initial render
+		if (prevStatus === 'unknown' && opponentStatus !== 'unknown') {
+			setPrevStatus(opponentStatus)
+			return
+		}
+
+		// Show notification on disconnect
+		if (prevStatus === 'online' && opponentStatus === 'offline') {
+			toast.error('Opponent disconnected', {
+				duration: 3000,
+			})
+		}
+
+		// Show notification on reconnect
+		if (prevStatus === 'offline' && opponentStatus === 'online') {
+			toast.success('Opponent reconnected', {
+				duration: 3000,
+			})
+		}
+
+		setPrevStatus(opponentStatus)
+	}, [opponentStatus, prevStatus])
 
 	const isMyTurn = game.status === 'playing' && game.currentPlayer === mySymbol
 	const isWaiting = game.status === 'waiting'
@@ -53,8 +121,11 @@ const View: FC<ViewProps> = ({ game, userId, onMakeMove, onLeaveGame, error }) =
 		return []
 	}
 
+	const opponentName = mySymbol === 'X' ? 'Opponent' : game.creatorName
+
 	return (
 		<GameContainer>
+			<Toaster position="top-center" />
 			<Header>
 				<Title>Tic Tac Toe Room</Title>
 				<Button variant="danger" size="sm" onClick={onLeaveGame}>
@@ -74,6 +145,9 @@ const View: FC<ViewProps> = ({ game, userId, onMakeMove, onLeaveGame, error }) =
 				</WaitingState>
 			) : (
 				<>
+					{game.players.O && (
+						<OpponentStatus status={opponentStatus} opponentName={opponentName} />
+					)}
 					<Info
 						currentPlayer={game.currentPlayer}
 						mySymbol={mySymbol}

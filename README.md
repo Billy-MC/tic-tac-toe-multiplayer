@@ -71,24 +71,25 @@ A real-time multiplayer Tic Tac Toe game built with React, TypeScript, and Fireb
 
 ```zsh
 src/
-├── assets/                     # Application assets
-├── components/                 # React shared components
+├── assets/                         # Application assets
+├── components/                     # React shared components
 ├── domain/
-│   └── ticTacToeLogic.ts       # Pure game logic
+│   └── ticTacToeLogic.ts           # Pure game logic
 ├── infrastructure/
-│   ├── firebase.ts             # Firebase configuration
-│   ├── FirebaseAuthService.ts  # Auth Service
-│   └── FirebaseGameService.ts  # Game Service
-├── interfaces/                 # Service interfaces
-├── pages/                      # Page component
-│   └── TicTacToePage           # Main Page
-│── stores/                     # State management
-│── styles/                     # Styling
+│   ├── firebase.ts                 # Firebase configuration
+│   ├── FirebaseAuthService.ts      # Auth Service
+│   ├── FirebaseGameService.ts      # Game Service
+│   └── FirebasePresenceService.ts  # Presence Service
+├── interfaces/                     # Service interfaces
+├── pages/                          # Page component
+│   └── TicTacToePage               # Main Page
+│── stores/                         # State management
+│── styles/                         # Styling
 ├── types/
-│   ├── styled.d.ts             # Styling types
-│   └── ticTacToe.d.ts          # TypeScript types
-├── utils/                      # utilities tools
-└── App.tsx                     # Main component
+│   ├── styled.d.ts                 # Styling types
+│   └── ticTacToe.d.ts              # TypeScript types
+├── utils/                          # utilities tools
+└── App.tsx                         # Main component
 ```
 
 ## Getting Started
@@ -128,18 +129,18 @@ yarn install
     a. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
 
     b. Enable Authentication:
-      - Go to Authentication → Sign-in method
-      - Enable Email/Password
+    - Go to Authentication → Sign-in method
+    - Enable Email/Password
 
     c. Create Realtime Database:
-      - Go to Realtime Database → Create Database
-      - Choose location (e.g., Asia Southeast)
-      - Start in test mode
+    - Go to Realtime Database → Create Database
+    - Choose location (e.g., Asia Southeast)
+    - Start in test mode
 
     d. Get Firebase configuration:
-      - Project Settings → General → Your apps
-      - Click Web (</>) to register app
-      - Copy the configuration
+    - Project Settings → General → Your apps
+    - Click Web (</>) to register app
+    - Copy the configuration
 
 4. **Configure environment variables**
 
@@ -178,27 +179,27 @@ yarn dev
 ## How to Play
 
 1. **Sign Up / Sign In**
-   - Create account or log in
-   - Your display name appears in UI
+    - Create account or log in
+    - Your display name appears in UI
 
 2. **Create or Join Game**
-   - Click "Create Game" to start
-   - OR click "Join Game" on available game
+    - Click "Create Game" to start
+    - OR click "Join Game" on available game
 
 3. **Play**
-   - Player X (creator) goes first
-   - Click empty cell to move
-   - Wait for opponent's turn
-   - Real-time updates for both players
+    - Player X (creator) goes first
+    - Click empty cell to move
+    - Wait for opponent's turn
+    - Real-time updates for both players
 
 4. **Win or Draw**
-   - 3 in a row wins (horizontal/vertical/diagonal)
-   - Full board with no winner = draw
-   - Winning cells highlighted yellow
+    - 3 in a row wins (horizontal/vertical/diagonal)
+    - Full board with no winner = draw
+    - Winning cells highlighted yellow
 
 5. **Leave Game**
-   - Click "Leave Game" to exit
-   - Click "Exit Game" after finish
+    - Click "Leave Game" to exit
+    - Click "Exit Game" after finish
 
 ## Running Tests
 
