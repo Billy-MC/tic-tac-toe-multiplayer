@@ -28,7 +28,7 @@ class FirebasePresenceService {
 
 	// Mark player as online
 	async setPlayerOnline(gameId: string, player: Player): Promise<void> {
-		const presenceRef = ref(database, `games/${gameId}/playerPresence/${player}`)
+		const presenceRef = this.presenceRef(gameId, player)
 
 		await set(presenceRef, {
 			online: true,
@@ -38,7 +38,7 @@ class FirebasePresenceService {
 
 	// Mark player as offline
 	async setPlayerOffline(gameId: string, player: Player): Promise<void> {
-		const presenceRef = ref(database, `games/${gameId}/playerPresence/${player}`)
+		const presenceRef = this.presenceRef(gameId, player)
 
 		await set(presenceRef, {
 			online: false,
@@ -56,7 +56,7 @@ class FirebasePresenceService {
 			lastSeen: serverTimestamp(),
 		})
 
-		// Also set online now
+		// Set online now
 		set(refForPlayer, {
 			online: true,
 			lastSeen: serverTimestamp(),
@@ -70,7 +70,7 @@ class FirebasePresenceService {
 		gameId: string,
 		callback: (presence: GamePresence | null) => void
 	): Unsubscribe {
-		const presenceRef = ref(database, `games/${gameId}/playerPresence`)
+		const presenceRef = this.presenceRef(gameId)
 
 		const unsubscribe = onValue(
 			presenceRef,
