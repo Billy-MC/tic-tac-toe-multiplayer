@@ -24,6 +24,7 @@ import {
 } from '@/domain/ticTacToeLogic'
 import { GameListItem, GameState, GameUpdate, GameWrite } from '@/types/ticTacToe'
 import { logger } from '@/utils/logger'
+import { presenceService } from './FirebasePresenceService'
 
 // Tic Tac Toe Game services
 class FirebaseGameService implements IGameService {
@@ -59,6 +60,7 @@ class FirebaseGameService implements IGameService {
 			...newGame,
 			creatorName: userName,
 		})
+		presenceService.setupDisconnectHandler(gameId, 'X')
 		return gameId
 	}
 
@@ -84,6 +86,8 @@ class FirebaseGameService implements IGameService {
 			'players/O': userId,
 			status: 'playing',
 		})
+
+		presenceService.setupDisconnectHandler(gameId, 'O')
 	}
 
 	async makeMove(gameId: string, cellIndex: number, userId: string): Promise<void> {
@@ -193,6 +197,14 @@ class FirebaseGameService implements IGameService {
 		}
 
 		const game = snapshot.val() as GameState
+
+		const playerSymbol =
+			game.players.X === userId ? 'X' : game.players.O === userId ? 'O' : null
+
+		if (playerSymbol) {
+			// Clean up presence before leaving
+			await presenceService.cleanupPresence(gameId, playerSymbol)
+		}
 
 		if (game.status === 'waiting' && game.players.X === userId) {
 			await set(gameRef, null)

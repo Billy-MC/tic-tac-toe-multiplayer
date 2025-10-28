@@ -26,6 +26,17 @@ export interface GameState {
 	result?: GameResult
 	creatorName?: string
 	creatorId?: string
+	// Player presence tracking
+	playerPresence?: {
+		X: {
+			online: boolean
+			lastSeen: number
+		}
+		O: {
+			online: boolean
+			lastSeen: number
+		} | null
+	}
 }
 
 type RTDBServerTimestamp = ReturnType<typeof serverTimestamp>
@@ -47,4 +58,18 @@ export interface GameListItem {
 	creatorName: string
 	createdAt: number
 	creatorId: string
+}
+
+export type PlayerStatus = 'online' | 'offline' | 'unknown'
+
+export type OpponentStatus = 'online' | 'offline' | 'unknown'
+
+export interface PlayerPresence {
+	online: boolean
+	lastSeen: number
+}
+
+export interface GamePresence {
+	X: PlayerPresence
+	O: PlayerPresence | null
 }
