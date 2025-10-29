@@ -120,7 +120,6 @@ class FirebasePresenceService implements IPresenceService {
 	async cleanupPresence(gameId: string, player: Player): Promise<void> {
 		try {
 			await this.setPlayerOffline(gameId, player)
-			logger.info(`Cleaned up presence for player ${player} in game ${gameId}`)
 		} catch (error) {
 			logger.error('Failed to cleanup presence:', error)
 		}
