@@ -107,6 +107,7 @@ class FirebasePresenceService implements IPresenceService {
 	 * @param lastSeen - timestamp of last seen
 	 * @param gracePeriod - grace period in milliseconds (default: 10 seconds)
 	 */
+	// NOT Working now, will investigate
 	isPlayerOnline(lastSeen: number, gracePeriod: number = 10000): boolean {
 		const now = Date.now()
 		const timeSinceLastSeen = now - lastSeen
