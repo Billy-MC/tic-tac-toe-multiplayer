@@ -11,7 +11,7 @@ import { auth } from '@/infrastructure/firebase'
 import type { IAuthService } from '@/interfaces/IAuthService'
 import type { User } from '@/types/ticTacToe'
 
-// Converts Firebase User to User type
+// Helper for map Firebase's user object to our domain User type
 const mapFirebaseUserToUser = (firebaseUser: FirebaseUser): User => {
 	return {
 		id: firebaseUser.uid,
@@ -20,7 +20,12 @@ const mapFirebaseUserToUser = (firebaseUser: FirebaseUser): User => {
 	}
 }
 
+/**
+ * Handles authentication logic:
+ * sign in, sign up, sign out, and auth state listeners.
+ */
 class FirebaseAuthService implements IAuthService {
+	// Sign in existing user
 	async signIn(email: string, password: string): Promise<User> {
 		try {
 			const userCredential = await signInWithEmailAndPassword(auth, email, password)
@@ -29,6 +34,7 @@ class FirebaseAuthService implements IAuthService {
 			throw new Error('Failed to sign in. Please check your credentials and try again.')
 		}
 	}
+	// Register new user account and set display name
 	async signUp(email: string, password: string, displayName: string): Promise<User> {
 		try {
 			const userCredential = await createUserWithEmailAndPassword(auth, email, password)
@@ -41,6 +47,7 @@ class FirebaseAuthService implements IAuthService {
 		}
 	}
 
+	// Sign the current user out
 	async signOut(): Promise<void> {
 		try {
 			await firebaseSignOut(auth)
@@ -49,11 +56,13 @@ class FirebaseAuthService implements IAuthService {
 		}
 	}
 
+	// Get current user synchronously (may be null if not logged in)
 	getCurrentUser(): User | null {
 		const firebaseUser = auth.currentUser
 		return firebaseUser ? mapFirebaseUserToUser(firebaseUser) : null
 	}
 
+	// Subscribe to auth state changes (login/logout). Returns unsubscribe fn
 	onAuthStateChanged(callback: (user: User | null) => void): () => void {
 		// Listen for auth state changes
 		const unsubscribe = firebaseOnAuthStateChanged(auth, firebaseUser => {

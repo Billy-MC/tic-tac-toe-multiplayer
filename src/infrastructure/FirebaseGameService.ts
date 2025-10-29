@@ -26,14 +26,17 @@ import { GameListItem, GameState, GameUpdate, GameWrite } from '@/types/ticTacTo
 import { logger } from '@/utils/logger'
 import { presenceService } from './FirebasePresenceService'
 
-// Tic Tac Toe Game services
+/**
+ * Handles all game-related logic for Tic-Tac-Toe:
+ * creation, joining, moves, game updates, and lobby listing.
+ */
 class FirebaseGameService implements IGameService {
 	private readonly gamesRef: DatabaseReference
 
 	constructor() {
 		this.gamesRef = ref(database, 'games')
 	}
-
+	// Create a new game hosted by current user
 	async createGame(userId: string, userName: string): Promise<string> {
 		// Create a new game entry in the database
 		const newGameRef = push(this.gamesRef)
@@ -43,7 +46,7 @@ class FirebaseGameService implements IGameService {
 			id: gameId,
 			board: createEmptyBoard(),
 			currentPlayer: 'X',
-			status: 'waiting',
+			status: 'waiting', // waiting for opponent
 			players: {
 				X: userId,
 				O: null,
@@ -56,14 +59,18 @@ class FirebaseGameService implements IGameService {
 
 		// Save the new game to the database
 		// Store the creator's name for display in the lobby
+		// Persist new game
 		await set(newGameRef, {
 			...newGame,
 			creatorName: userName,
 		})
+
+		// Setup presence for player X
 		presenceService.setupDisconnectHandler(gameId, 'X')
 		return gameId
 	}
 
+	// Join existing waiting game as player O
 	async joinGame(gameId: string, userId: string): Promise<void> {
 		// Fetch the game data
 		const gameRef = ref(database, `games/${gameId}`)
@@ -72,6 +79,7 @@ class FirebaseGameService implements IGameService {
 			throw new Error('Game not found')
 		}
 
+		// Update to start playing
 		const game = snapshot.val() as GameState
 
 		if (game.status !== 'waiting') {
@@ -90,6 +98,10 @@ class FirebaseGameService implements IGameService {
 		presenceService.setupDisconnectHandler(gameId, 'O')
 	}
 
+	/**
+	 * Player makes a move (write turn result into DB).
+	 * Includes validation: turn order, valid cell, game state.
+	 */
 	async makeMove(gameId: string, cellIndex: number, userId: string): Promise<void> {
 		const gameRef = ref(database, `games/${gameId}`)
 		const snapshot: DataSnapshot = await get(gameRef)
@@ -123,6 +135,7 @@ class FirebaseGameService implements IGameService {
 			throw new Error('Invalid move, cell is already occupied')
 		}
 
+		// Compute new board and evaluate game result
 		const newBoard = makeMove(game.board, cellIndex, playerSymbol)
 		const gameResult = evaluateGameStatus(newBoard)
 
@@ -131,7 +144,7 @@ class FirebaseGameService implements IGameService {
 			updatedAt: serverTimestamp(),
 		}
 
-		// Update game status based on the result
+		// If game ended, set result; otherwise switch player
 		if (gameResult.type !== 'ongoing') {
 			updates.status = 'finished'
 			updates.result = gameResult
@@ -142,7 +155,7 @@ class FirebaseGameService implements IGameService {
 		await update(gameRef, updates)
 	}
 
-	// Listen to real-time updates for a specific game
+	// Subscribe to realtime updates for a specific game
 	listenToGame(gameId: string, callback: (game: GameState | null) => void): () => void {
 		const gameRef = ref(database, `games/${gameId}`)
 		// Subscribe to value changes
@@ -157,7 +170,7 @@ class FirebaseGameService implements IGameService {
 		return unsubscribe
 	}
 
-	// Listen to available games
+	// Listen to all available (waiting) games in lobby
 	listenToAvailableGames(callback: (games: GameListItem[]) => void): () => void {
 		const waitingGamesQuery = query(this.gamesRef, orderByChild('status'), equalTo('waiting'))
 
@@ -188,6 +201,7 @@ class FirebaseGameService implements IGameService {
 		return unsubscribe
 	}
 
+	// Handle user leaving the game (cleanup + finish if needed)
 	async leaveGame(gameId: string, userId: string): Promise<void> {
 		const gameRef = ref(database, `games/${gameId}`)
 		const snapshot: DataSnapshot = await get(gameRef)
@@ -206,12 +220,13 @@ class FirebaseGameService implements IGameService {
 			await presenceService.cleanupPresence(gameId, playerSymbol)
 		}
 
+		// If creator leaves before opponent joined, delete the game
 		if (game.status === 'waiting' && game.players.X === userId) {
 			await set(gameRef, null)
 			return
 		}
 
-		// If game is playing, mark it as finished
+		// If game is playing -> end game and mark winner as the other player
 		if (game.status === 'playing') {
 			const winner = game.players.X === userId ? 'O' : 'X'
 			await update(gameRef, {

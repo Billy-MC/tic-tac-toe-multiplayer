@@ -13,13 +13,19 @@ import { database } from '@/infrastructure/firebase'
 import type { GamePresence, Player } from '@/types/ticTacToe'
 import { logger } from '@/utils/logger'
 
+/**
+ * Manages player presence state (online/offline) for each game.
+ * Uses Realtime Database and onDisconnect() for auto cleanup.
+ */
 class FirebasePresenceService {
 	private readonly gamesRef: DatabaseReference
 
 	constructor() {
+		//  Root reference for all games in DB
 		this.gamesRef = ref(database, 'games')
 	}
 
+	// Helper to get presence reference for a game (and optional player)
 	private presenceRef(gameId: string, player?: Player) {
 		return player
 			? child(this.gamesRef, `${gameId}/playerPresence/${player}`)
@@ -36,7 +42,7 @@ class FirebasePresenceService {
 		})
 	}
 
-	// Mark player as offline
+	// Mark player as offline manually
 	async setPlayerOffline(gameId: string, player: Player): Promise<void> {
 		const presenceRef = this.presenceRef(gameId, player)
 
@@ -46,17 +52,21 @@ class FirebasePresenceService {
 		})
 	}
 
-	// Setup automatic disconnect handler
+	/**
+	 * Setup automatic disconnect handler.
+	 * This ensures Firebase marks the player as offline
+	 * if the client disconnects unexpectedly (e.g. tab closed).
+	 */
 	setupDisconnectHandler(gameId: string, player: Player): void {
 		const refForPlayer = this.presenceRef(gameId, player)
 
-		// Set up onDisconnect callback (runs server-side automatically)
+		// Mark offline when connection is lost(runs server-side automatically)
 		onDisconnect(refForPlayer).set({
 			online: false,
 			lastSeen: serverTimestamp(),
 		})
 
-		// Set online now
+		// Immediately mark as online now
 		set(refForPlayer, {
 			online: true,
 			lastSeen: serverTimestamp(),
@@ -65,7 +75,7 @@ class FirebasePresenceService {
 		})
 	}
 
-	// Listen to presence changes for a specific game
+	// Listen to presence updates for a game
 	listenToPresence(
 		gameId: string,
 		callback: (presence: GamePresence | null) => void
@@ -92,7 +102,8 @@ class FirebasePresenceService {
 	}
 
 	/**
-	 * Check if player is online (with grace period)
+	 * Helper to check if player considered "online"
+	 * within a configurable grace period (default 10s).
 	 * @param lastSeen - timestamp of last seen
 	 * @param gracePeriod - grace period in milliseconds (default: 10 seconds)
 	 */
@@ -104,7 +115,7 @@ class FirebasePresenceService {
 		return timeSinceLastSeen < gracePeriod
 	}
 
-	// Clean up presence when player leaves
+	// Cleanup function when player leaves or game ends
 	async cleanupPresence(gameId: string, player: Player): Promise<void> {
 		try {
 			await this.setPlayerOffline(gameId, player)
