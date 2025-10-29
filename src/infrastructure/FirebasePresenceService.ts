@@ -90,7 +90,6 @@ class FirebasePresenceService implements IPresenceService {
 					callback(snapshot.val() as GamePresence)
 				} else {
 					callback(null)
-					logger.warn(`Presence data for game ${gameId} does not exist.`)
 				}
 			},
 			error => {

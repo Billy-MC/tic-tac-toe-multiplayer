@@ -3,6 +3,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 import { gameService } from '@/infrastructure/FirebaseGameService'
+import { Unsubscribe } from 'firebase/database'
 
 interface GameStore {
 	currentGame: GameState | null
@@ -16,20 +17,24 @@ interface GameStore {
 	joinGame: (gameId: string, userId: string) => Promise<void>
 	makeMove: (gameId: string, cellIndex: number, userId: string) => Promise<void>
 	leaveGame: (gameId: string, userId: string) => Promise<void>
-	subscribeToGame: (gameId: string) => () => void
-	subscribeToAvailableGames: () => () => void
+	subscribeToGame: (gameId: string) => Unsubscribe
+	subscribeToAvailableGames: () => Unsubscribe
 	clearGame: () => void
 	clearError: () => void
+	gameUnsubscribe: Unsubscribe | null
+	presenceUnsubscribe: Unsubscribe | null
 }
 
 const useGameStore = create<GameStore>()(
 	persist(
-		(set, __get) => ({
+		(set, get) => ({
 			currentGame: null,
 			currentGameId: null,
 			availableGames: [],
 			isLoading: false,
 			error: null,
+			gameUnsubscribe: null,
+			presenceUnsubscribe: null,
 
 			setCurrentGameId: (gameId: string | null) => {
 				set({ currentGameId: gameId })
@@ -83,6 +88,18 @@ const useGameStore = create<GameStore>()(
 
 			leaveGame: async (gameId: string, userId: string) => {
 				try {
+					const { gameUnsubscribe, presenceUnsubscribe } = get()
+
+					if (gameUnsubscribe) {
+						gameUnsubscribe()
+						set({ gameUnsubscribe: null })
+					}
+
+					if (presenceUnsubscribe) {
+						presenceUnsubscribe()
+						set({ presenceUnsubscribe: null })
+					}
+
 					await gameService.leaveGame(gameId, userId)
 					set({ currentGame: null, currentGameId: null })
 				} catch (error) {
@@ -94,6 +111,12 @@ const useGameStore = create<GameStore>()(
 			},
 
 			subscribeToGame: (gameId: string) => {
+				const { gameUnsubscribe } = get()
+
+				if (gameUnsubscribe) {
+					gameUnsubscribe()
+				}
+
 				const unsubscribe = gameService.listenToGame(gameId, game => {
 					if (game) {
 						set({ currentGame: game })
@@ -105,6 +128,7 @@ const useGameStore = create<GameStore>()(
 						})
 					}
 				})
+				set({ gameUnsubscribe: unsubscribe })
 				return unsubscribe
 			},
 

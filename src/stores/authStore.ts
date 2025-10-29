@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { User } from '@/types/ticTacToe'
 import { authService } from '@/infrastructure/FirebaseAuthService'
+import { Unsubscribe } from 'firebase/database'
 
 interface AuthState {
 	user: User | null
@@ -11,7 +12,7 @@ interface AuthState {
 	signUp: (email: string, password: string, displayName: string) => Promise<void>
 	signOut: () => Promise<void>
 	clearError: () => void
-	initializeApp: () => void
+	initializeApp: Unsubscribe
 }
 
 const useAuthStore = create<AuthState>()(
