@@ -12,12 +12,13 @@ import {
 import { database } from '@/infrastructure/firebase'
 import type { GamePresence, Player } from '@/types/ticTacToe'
 import { logger } from '@/utils/logger'
+import { IPresenceService } from '@/interfaces/IPresenceService'
 
 /**
  * Manages player presence state (online/offline) for each game.
  * Uses Realtime Database and onDisconnect() for auto cleanup.
  */
-class FirebasePresenceService {
+class FirebasePresenceService implements IPresenceService {
 	private readonly gamesRef: DatabaseReference
 
 	constructor() {
