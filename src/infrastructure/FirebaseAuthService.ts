@@ -10,6 +10,7 @@ import {
 import { auth } from '@/infrastructure/firebase'
 import type { IAuthService } from '@/interfaces/IAuthService'
 import type { User } from '@/types/ticTacToe'
+import { Unsubscribe } from 'firebase/database'
 
 // Helper for map Firebase's user object to our domain User type
 const mapFirebaseUserToUser = (firebaseUser: FirebaseUser): User => {
@@ -63,7 +64,7 @@ class FirebaseAuthService implements IAuthService {
 	}
 
 	// Subscribe to auth state changes (login/logout). Returns unsubscribe fn
-	onAuthStateChanged(callback: (user: User | null) => void): () => void {
+	onAuthStateChanged(callback: (user: User | null) => void): Unsubscribe {
 		// Listen for auth state changes
 		const unsubscribe = firebaseOnAuthStateChanged(auth, firebaseUser => {
 			callback(firebaseUser ? mapFirebaseUserToUser(firebaseUser) : null)

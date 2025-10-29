@@ -1,5 +1,5 @@
 import { GamePresence, Player } from '@/types/ticTacToe'
-import { Unsubscribe } from 'firebase/auth'
+import { Unsubscribe } from 'firebase/database'
 
 export interface IPresenceService {
 	setPlayerOnline(gameId: string, player: Player): Promise<void>

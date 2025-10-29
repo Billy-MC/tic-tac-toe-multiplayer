@@ -11,6 +11,7 @@ import {
 	serverTimestamp,
 	DatabaseReference,
 	DataSnapshot,
+	Unsubscribe,
 } from 'firebase/database'
 import { database } from '@/infrastructure/firebase'
 import type { IGameService } from '@/interfaces/IGameService'
@@ -156,7 +157,7 @@ class FirebaseGameService implements IGameService {
 	}
 
 	// Subscribe to realtime updates for a specific game
-	listenToGame(gameId: string, callback: (game: GameState | null) => void): () => void {
+	listenToGame(gameId: string, callback: (game: GameState | null) => void): Unsubscribe {
 		const gameRef = ref(database, `games/${gameId}`)
 		// Subscribe to value changes
 		const unsubscribe = onValue(gameRef, snapshot => {
@@ -171,7 +172,7 @@ class FirebaseGameService implements IGameService {
 	}
 
 	// Listen to all available (waiting) games in lobby
-	listenToAvailableGames(callback: (games: GameListItem[]) => void): () => void {
+	listenToAvailableGames(callback: (games: GameListItem[]) => void): Unsubscribe {
 		const waitingGamesQuery = query(this.gamesRef, orderByChild('status'), equalTo('waiting'))
 
 		const unsubscribe = onValue(
