@@ -1,4 +1,4 @@
-import { FC, useActionState, useRef, useState } from 'react'
+import { FC, useActionState, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import Input from '@/components/Input'
 import {
@@ -41,8 +41,6 @@ const SubmitButton: FC<{ children: React.ReactNode }> = ({ children }) => {
 
 // Inner form component handling sign in/up logic
 const InnerForm: FC<InnerFormProps> = ({ isSignUp, onSignIn, onSignUp, externalError }) => {
-	const formRef = useRef<HTMLFormElement>(null)
-
 	// Handle form submission with action state
 	const [state, formAction, isPending] = useActionState(
 		async (_prev: { error: string | null }, formData: FormData) => {
@@ -69,7 +67,7 @@ const InnerForm: FC<InnerFormProps> = ({ isSignUp, onSignIn, onSignUp, externalE
 	)
 
 	return (
-		<Form ref={formRef} action={formAction} noValidate>
+		<Form action={formAction} noValidate>
 			{isSignUp && (
 				<Input
 					id="displayName"
