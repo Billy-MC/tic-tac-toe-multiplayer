@@ -69,7 +69,7 @@ const InnerForm: FC<InnerFormProps> = ({ isSignUp, onSignIn, onSignUp, externalE
 	)
 
 	return (
-		<Form ref={formRef} method="post" action={formAction} noValidate>
+		<Form ref={formRef} action={formAction} noValidate>
 			{isSignUp && (
 				<Input
 					id="displayName"
